@@ -24,7 +24,7 @@ rows.each(function(index){
 			totEl=jQuery('<div/>',{'class':'totHours','style':'font-weight:bold;text-align: left;'})
 					.appendTo(previousColHoursTot);
 		}
-		totEl.html('TOT '+(hoursTot+hours));
+		totEl.html('TOT '+(isLastRow ? hoursTot+hours : hoursTot));
 	}
 	
 	//IDENTIFICAZIONE RIGA ATTUALE
