@@ -7,9 +7,10 @@ var rows=jQuery('#listaRigheOdT tr:not(.jqgfirstrow)'),
 rows.each(function(index){
 	var row=jQuery(this),
 		cols=row.find('td'),
+	    	colDay=cols.filter('[aria-describedby=listaRigheOdT_Data]'),
 		colHours=cols.filter('[aria-describedby=listaRigheOdT_OreOrdinarie]'),
+		gg=colDay.html(),
 		hours=+colHours.html().replace(',','.'),
-		gg=cols.filter('[aria-describedby=listaRigheOdT_Data]').html(),
 		isLastRow=rows.length==index+1,
 		totEl;
 		
@@ -21,10 +22,10 @@ rows.each(function(index){
 		}
 		totEl=previousColHoursTot.find('.totHours');
 		if (!totEl.length){
-			totEl=jQuery('<div/>',{'class':'totHours','style':'font-weight:bold;text-align: left;'})
+			totEl=jQuery('<div/>',{'class':'totHours','style':'font-weight:bold;font-size:16px;text-align: left;'})
 					.appendTo(previousColHoursTot);
 		}
-		totEl.html('TOT '+(isLastRow ? hoursTot+hours : hoursTot));
+		totEl.html(isLastRow ? hoursTot+hours : hoursTot);
 	}
 	
 	//IDENTIFICAZIONE RIGA ATTUALE
@@ -37,7 +38,9 @@ rows.each(function(index){
 		alternateBackground=!alternateBackground;
 	}
 	if (alternateBackground){
-		colHours.css('background','#ffeded');
+		colHours
+		.add(colDay)
+		.css('background','#ffeded');
 	}
 	previousColHoursTot=cols.filter('[aria-describedby=listaRigheOdT_OreStraordinarie]');
 });
