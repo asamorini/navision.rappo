@@ -1,6 +1,6 @@
-# navision.rappo.by.day
+# navision.rappo
 
-# <a name="installation">:wrench: Installation</a>
+# <a name="installation">:wrench: Installation "Rappo by day"</a>
 Add a :bookmark: Bookmark "NAVISION: rapportini-ferie (TOT.BY.DAY)" to your browser
    - copy and paste this javascript code into the bookmark URL
       ```
