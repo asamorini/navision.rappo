@@ -1,3 +1,9 @@
+//set new total rows number per page
+listaRigheOdT.p.rowNum= 120
+
+//refresh
+qJqGrid_firstPage(listaRigheOdT)
+
 var rows=jQuery('#listaRigheOdT tr:not(.jqgfirstrow)'),
 	ggOld='',
 	hoursTot=0,
