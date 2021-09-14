@@ -42,6 +42,11 @@
 
     function visualizzazione_ore_approvate(){
         console.log("pagina: Visualizzazione ore");
+        $("#dateFrom").val("01/08/2021");
+        //calcola today
+        $("#dateTo").val(new Date(Date.now()).toLocaleDateString('it-IT'));
+
+        $("#listaOreApprovate_btnFiltra").click();
     }
 
 
