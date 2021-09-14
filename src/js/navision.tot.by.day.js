@@ -1,24 +1,30 @@
-var label = $("#listaRigheOdT_situazionePaging")
+var label = $("#listaRigheOdT_situazionePaging");
 var LOADINGTXT = " (LOADING)";
 
-label.append(LOADINGTXT);
+//there is only one page of rows
+if (jQuery('#listaRigheOdT_btnPrev').is(':disabled')
+   && jQuery('#listaRigheOdT_btnNext').is(':disabled')){
+	showTotalHours();
+	
+//there are many pages of rows (so we retrieve all)
+}else{
+	label.append(LOADINGTXT);
 
-//set new total rows number per page
-listaRigheOdT.p.rowNum= 120;
+	//set new total rows number per page
+	listaRigheOdT.p.rowNum= 120;
 
-//refresh
-qJqGrid_firstPage(listaRigheOdT);
+	//refresh
+	qJqGrid_firstPage(listaRigheOdT);
 
-
-//verifico ciclicamente che l'aggiornamneto della tabella sia completato
-//monitrando il testo della label
-var timer = setInterval( function() {
-    if(label.html().indexOf(LOADINGTXT)=== -1){
-		clearInterval(timer);
-		showTotalHours();
-	}
-		
-}, 200);
+	//verifico ciclicamente che l'aggiornamneto della tabella sia completato
+	//monitrando il testo della label
+	var timer = setInterval( function() {
+	    if(label.html().indexOf(LOADINGTXT)=== -1){
+			clearInterval(timer);
+			showTotalHours();
+		}
+	}, 200);
+}
 
 
 function showTotalHours(){
