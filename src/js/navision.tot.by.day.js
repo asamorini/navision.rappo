@@ -1,91 +1,56 @@
-var label = $("#listaRigheOdT_situazionePaging");
-var LOADINGTXT = " (LOADING)";
+// ==UserScript==
+// @name         Navision_Improver
+// @namespace    http://tampermonkey.net/
+// @version      0.1
+// @description  making Navision a better tool
+// @author       tuffo19
+// @match        https://navisionweb.lutech.it/
+// @icon         https://www.google.com/s2/favicons?domain=lutech.it
+// @grant        none
+// ==/UserScript==
 
-//there is only one page of rows
-if (jQuery('#listaRigheOdT_btnPrev').is(':disabled')
-   && jQuery('#listaRigheOdT_btnNext').is(':disabled')){
-	showTotalHours();
-	
-//there are many pages of rows (so we retrieve all)
-}else{
-	label.append(LOADINGTXT);
+(function() {
+    'use strict';
 
-	//set new total rows number per page
-	listaRigheOdT.p.rowNum= 120;
-
-	//refresh
-	qJqGrid_firstPage(listaRigheOdT);
-
-	//verifico ciclicamente che l'aggiornamneto della tabella sia completato
-	//monitrando il testo della label
-	var timer = setInterval( function() {
-	    if(label.html().indexOf(LOADINGTXT)=== -1){
-			clearInterval(timer);
-			showTotalHours();
-		}
-	}, 200);
-}
+    var $ = window.jQuery;
+    var HACKTXT = " ~~~Hacked by Tuffo19~~~";
 
 
-function showTotalHours(){
-	var rows=jQuery('#listaRigheOdT tr:not(.jqgfirstrow)'),
-		ggOld='',
-		hoursTot=0,
-		previousColHoursTot,
-		alternateBackground=true,
-			totalizePreviousDay=function(hoursTotal,colHoursToUpdate){	//aggiorno il totale ore precedente
-			var totEl=colHoursToUpdate.find('.totHours');
-			if (!totEl.length){
-				totEl=jQuery('<div/>',{'class':'totHours','style':'font-weight:bold;font-size:16px;text-align: left;'})
-						.appendTo(colHoursToUpdate);
-			}
-			
-			totEl
-			.html(hoursTotal)
-			.css('color',hoursTotal>8 ? 'black' : hoursTotal===8 ? 'green' : 'red');
-			colHoursToUpdate.parents('tr').css('border-bottom','3px solid #000');
-		};
+    var timer = setInterval( function() {
+    var pageTitle = $("#ViewBagTitle");
 
-	rows.each(function(index){
-		var row=jQuery(this),
-			cols=row.find('td'),
-				colDay=cols.filter('[aria-describedby=listaRigheOdT_Data]'),
-			colHours=cols.filter('[aria-describedby=listaRigheOdT_OreOrdinarie]'),
-			gg=colDay.html(),
-			hours=+colHours.html().replace(',','.'),
-			isLastRow=rows.length==index+1;
-			
-		//AGGIORNAMENTO RIGHE PRECEDENTI
-		if ((gg!==ggOld && ggOld) || isLastRow){
-			if (gg!==ggOld && ggOld){
-				totalizePreviousDay(hoursTot,previousColHoursTot);
-				hoursTot=0;
-			}
-			if (isLastRow){
-				hoursTot+=hours;
-				previousColHoursTot=cols.filter('[aria-describedby=listaRigheOdT_OreStraordinarie]');
-				totalizePreviousDay(hoursTot,previousColHoursTot);
-			}
-		}
-		
-		//IDENTIFICAZIONE RIGA ATTUALE
-		if (gg===ggOld){
-			if (!isLastRow){
-				hoursTot+=hours;
-			}
+        if (pageTitle.html().indexOf(HACKTXT)=== -1){
 
-		}else{
-			ggOld=gg;
-			hoursTot=hours;	//conteggio nuovo totale ore
-			alternateBackground=!alternateBackground;
-		}
-		/*
-		if (alternateBackground){
-			colHours
-			.add(colDay)
-			.css('background','#ffeded');
-		}
-		*/
-		previousColHoursTot=cols.filter('[aria-describedby=listaRigheOdT_OreStraordinarie]');
-	});
-}
+            switch(pageTitle.html()){
+                case 'Dettaglio Rapportino Tempi e Spese': dettaglio_rapportini_tempi(); break;
+                case 'Visualizzazione ore approvate': visualizzazione_ore_approvate(); break;
+                default: break;
+            }
+             pageTitle.append(HACKTXT);
+        }
+	}, 500);
+
+  function dettaglio_rapportini_tempi(){
+        console.log("pagina: Dettaglio rapportini");
+        $(".ui-jqgrid-bdiv").css('height','auto');
+
+        $("#btnBack").parent().append(
+        '<button id="btnDettaglioRapportini" type="button" onclick="$.ajaxSetup({cache:true});$.getScript(\'https://asamorini.github.io/navision.rappo/src/js/navision.tot.by.day.js\');" '+
+        'class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary" role="button" aria-disabled="false">'+
+        '<span class="ui-button-icon-primary ui-icon ui-icon-refresh"></span><span class="ui-button-text">Mostra totale ore</span></button>')
+    }
+
+    function visualizzazione_ore_approvate(){
+        console.log("pagina: Visualizzazione ore");
+        $("#dateFrom").val("01/08/2021");
+        //calcola today
+        //$("#dateTo").val(new Date(Date.now()).toLocaleDateString('it-IT'));
+        $("#dateTo").val("31/12/2025");
+        listaOreApprovate.p.rowNum = 1200;
+        $(".ui-jqgrid-bdiv").css('height','auto');
+
+        $("#listaOreApprovate_btnFiltra").click();
+    }
+
+
+})();
