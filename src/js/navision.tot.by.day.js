@@ -1,7 +1,7 @@
 var label = $("#listaRigheOdT_situazionePaging");
 var LOADINGTXT = " (LOADING)";
 
-
+/*
 //there is only one page of rows
 if (jQuery('#listaRigheOdT_btnPrev').is(':disabled')
    && jQuery('#listaRigheOdT_btnNext').is(':disabled')){
@@ -26,7 +26,7 @@ if (jQuery('#listaRigheOdT_btnPrev').is(':disabled')
 		}
 	}, 200);
 }
-
+*/
 
 
 function showTotalHours(){
@@ -194,6 +194,9 @@ function qJqGrid_loadData(grid, obj) {
 			}
 		});
 	}
+
+	//add total hours by day
+	showTotalHours();
 	
 	//ORIGINAL CODE
     obj = null;
