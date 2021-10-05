@@ -1,5 +1,6 @@
 # navision.rappo
 Once activated, reports will appear at each screen
+(the first time you access the Navision page, then it remains active until the session expires)
 - total the hours per day
 - an additional column is displayed with the "Notes" field of the report
 
