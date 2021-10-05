@@ -1,7 +1,8 @@
+
+/*
 var label = $("#listaRigheOdT_situazionePaging");
 var LOADINGTXT = " (LOADING)";
 
-/*
 //there is only one page of rows
 if (jQuery('#listaRigheOdT_btnPrev').is(':disabled')
    && jQuery('#listaRigheOdT_btnNext').is(':disabled')){
@@ -134,17 +135,7 @@ function qJqGrid_loadData(grid, obj) {
 			jQuery(colsTitle[i]).remove();
 			colNoteRemoved++;
 		}
-		//first fake row (used for width, I presume)
-/*
-		totWidth
-		jQuery('#listaRigheOdT tr.jqgfirstrow td')
-		.each(function(index){
-			if ()
-			colNoteRemoved
-			;
-		});
-		
-*/	
+	
 		//rows
 		var rows=jQuery('#listaRigheOdT tr');
 		rows.each(function(index){
@@ -179,9 +170,10 @@ function qJqGrid_loadData(grid, obj) {
 					col=jQuery(colsEmpty[i]);
 					if (i===0){
 						col.css({
+							'background':'#009688',
 							'text-align':'left',
 							'white-space':'normal',
-							'color':'green'
+							'color':'white'
 						})
 						.html(note);
 					}else{
