@@ -242,9 +242,11 @@ teclaNavision.rappo=(function($,_window){
 		$(document).ready(function(){
 
 			//MESSAGE EXTRA FUNCTIONS ACTIVATED
-			var message=$('<a id="teclaNavisionMessage"/>',{
+			var message=$('<a/>',{
+						'id':'teclaNavisionMessage',
 						'href':'https://github.com/asamorini/navision.rappo'
-					}).css({
+					})
+					.css({
 						'-moz-transition':		'all 1s ease-in',
 						'-webkit-transition':	'all 1s ease-in',
 						'-o-transition':		'all 1s ease-in',
@@ -255,15 +257,17 @@ teclaNavision.rappo=(function($,_window){
 						'color': 				'#d22020',
 						'font-size':			'12px',
 					})
-				,messageContainer=$('<div/>',{'style':'text-align: right;position: absolute;bottom: 10px;right: 10px;'});
+				,messageContainer=$('<div/>',{'style':'text-align: right;position: absolute;transition: all 2s ease-out 0s;right: 10px;bottom: calc(100% - -50px)'});
 			$('#accordionMenu .ui-accordion-content')
 			.append(
 				messageContainer.append(message.html('Tecla plugin enabled'))
 			);
 			//"version" highlight effect: START
-			message=$('#teclaNavisionMessage')
+			message=$('#teclaNavisionMessage');
+			messageContainer=message.parent('div');
 			setTimeout(function(){
-				message.css({'background':'#88b5d9'});
+				message.css({'background':'#a3ede6'});
+				messageContainer.css({'bottom':'10px'});
 				//"version" highlight effect: END
 				setTimeout(function(){
 					message.css({'color':'#d22020','background':'#eeeeee'});
@@ -325,7 +329,6 @@ teclaNavision.rappo=(function($,_window){
 /*OLD VERSION
 var label = $("#listaRigheOdT_situazionePaging");
 var LOADINGTXT = " (LOADING)";
-
 //there is only one page of rows
 if ($('#listaRigheOdT_btnPrev').is(':disabled')
    && $('#listaRigheOdT_btnNext').is(':disabled')){
@@ -334,13 +337,10 @@ if ($('#listaRigheOdT_btnPrev').is(':disabled')
 //there are many pages of rows (so we retrieve all)
 }else{
 	label.append(LOADINGTXT);
-
 	//set new total rows number per page
 	listaRigheOdT.p.rowNum= 120;
-
 	//refresh
 	qJqGrid_firstPage(listaRigheOdT);
-
 	//verifico ciclicamente che l'aggiornamneto della tabella sia completato
 	//monitrando il testo della label
 	var timer = setInterval( function() {
