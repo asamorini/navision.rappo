@@ -135,7 +135,7 @@ teclaNavision.rappo=(function($,_window){
 					$(colsEmpty[(colsEmpty.length - colNoteRemoved)-1])
 					.width(totWidth);
 					for (var i=0;i<=colNoteRemoved;i++){
-						$(colsEmpty[colsEmpty.length - colNoteRemoved])
+						$(colsEmpty[colsEmpty.length - i])
 						.remove();
 					}
 
