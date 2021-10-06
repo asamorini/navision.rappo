@@ -100,6 +100,12 @@ teclaNavision.rappo=(function($,_window){
 						...
 				*/
 	
+	
+		//ADD COLUMN NOTE
+		_highlightText=function(text,textToHighlight){
+			return text.replace(new RegExp('(^|\\s)(' + textToHighlight + ')(\\s|$)','ig'), '$1<span style="font-weight: bold;background: black;">$2</span>$3');
+		},
+		
 		//ADD COLUMN NOTE
 		_addColumnNote=function(){
 			//title
@@ -158,7 +164,9 @@ teclaNavision.rappo=(function($,_window){
 								'white-space':'normal',
 								'color':'white'
 							})
-							.html(note);
+							.html(
+								_highlightText(note,'[A-Z0-9]+-[0-9]+')	//highlight issue number; ex: from this "ELESAB2B-706 SE_eComm: admin account with ecommerce utilities" to this "<b>ELESAB2B-706</b> SE_eComm: admin account with ecommerce utilities"
+							);
 						}else{
 							//col.hide();
 							col.remove();
