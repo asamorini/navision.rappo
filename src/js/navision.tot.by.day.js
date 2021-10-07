@@ -250,7 +250,8 @@ teclaNavision.rappo=(function($,_window){
 		$(document).ready(function(){
 
 			//MESSAGE EXTRA FUNCTIONS ACTIVATED
-			var message=$('<a/>',{
+			var leftContainer=$('#accordionMenu .ui-accordion-content').first()
+				,message=$('<a/>',{
 						'id':'teclaNavisionMessage',
 						'href':'https://github.com/asamorini/navision.rappo'
 					})
@@ -263,10 +264,21 @@ teclaNavision.rappo=(function($,_window){
 						'border-radius':		'16px',
 						'padding':				'5px 10px',
 						'color': 				'#d22020',
-						'font-size':			'12px',
+						'font-size':			'12px'
 					})
-				,messageContainer=$('<div/>',{'style':'text-align: right;position: absolute;transition: all 2s ease-out 0s;right: 10px;bottom: calc(100% - -50px)'});
-			$('#accordionMenu .ui-accordion-content')
+				,messageContainer=$('<div/>')
+					.css({
+						'position':				'absolute',
+						'-moz-transition':		'all 2s ease-out 0s',
+						'-webkit-transition':	'all 2s ease-out 0s',
+						'-o-transition':		'all 2s ease-out 0s',
+						'transition':			'all 2s ease-out 0s',
+						'right':				'10px',
+						'bottom':				(leftContainer.height() - leftContainer.find('>a').last().position().top) - 30,	//posiziono sotto all'ultimo tasto del navigatore
+						'text-align':			'right',
+						'opacity':				'0'
+					});
+			leftContainer
 			.append(
 				messageContainer.append(message.html('Tecla plugin enabled'))
 			);
@@ -275,12 +287,12 @@ teclaNavision.rappo=(function($,_window){
 			messageContainer=message.parent('div');
 			setTimeout(function(){
 				message.css({'background':'#a3ede6'});
-				messageContainer.css({'bottom':'10px'});
+				messageContainer.css({'bottom':'10px','opacity':1});
 				//"version" highlight effect: END
 				setTimeout(function(){
 					message.css({'color':'#d22020','background':'#eeeeee'});
 				},1500);
-			},1000);
+			},200);
 			
 		});
 
