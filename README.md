@@ -7,10 +7,9 @@ Once activated, reports will appear at each screen
 ![plugin_enabled](docs/images/navision.rappo.jpg)
 
 # <a name="installation">:wrench: Installation "Rappo by day"</a>
-Add a :bookmark: Bookmark "NAVISION: rapportini-ferie plugin" to your browser
+1) [ONLY ONCE] Add a :bookmark: Bookmark "NAVISION: rapportini-ferie plugin" to your browser (with a name as you want)
    - copy and paste this javascript code into the bookmark URL
       ```
       javascript:jQuery.ajaxSetup(%7Bcache:true%7D);jQuery.getScript('https://asamorini.github.io/navision.rappo/src/js/navision.tot.by.day.js');
       ```
-
-
+2) When you are visiting https://navisionweb........it/ site, after logging in, you can activate the plugin by running the bookmark
