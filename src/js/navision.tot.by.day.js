@@ -28,9 +28,13 @@ function qJqGrid_loadData(grid, obj) {
 }
 
 function qJqGrid_firstPage(grid) {
+	//ORIGINAL CODE
+    var pagesize = grid.p.rowNum;
+
 	//TECLA CODE
-    //var pagesize = grid.p.rowNum;
-	var pagesize=teclaNavision.rappo.MAX_ROWS_NUMBER;
+	if (grid.id==='listaRigheOdT'){
+		pagesize=teclaNavision.rappo.MAX_ROWS_NUMBER;	//aumento numero di righe
+	}
 	
 	//ORIGINAL CODE
     var url = grid.p.ajaxUrl;
