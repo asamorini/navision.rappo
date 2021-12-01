@@ -107,7 +107,7 @@ teclaNavision.rappo=(function($,_window){
 	
 		//ADD COLUMN NOTE
 		_highlightText=function(text,textToHighlight){
-			return text.replace(new RegExp('(^|\\s)(' + textToHighlight + ')(\\s|$)','ig'), '$1<span style="font-weight: bold;background: #ffe1ba;padding: 0px 5px;color: #000;">$2</span>$3');
+			return text.replace(new RegExp('(^|\\s)(' + textToHighlight + ')(\\s|$)','ig'), '$1<span style="font-weight: bold;background: #ffffff;padding: 0px 5px;color: #000;">$2</span>$3');
 		},
 		
 		//ADD COLUMN NOTE
