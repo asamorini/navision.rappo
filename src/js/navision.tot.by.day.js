@@ -17,7 +17,7 @@ function qJqGrid_loadData(grid, obj) {
     $('#' + grid.id)[0].addJSONData(obj);
 
 	//TECLA CODE
-	var tableRappo=$('#listaRigheOdT');
+	var tableRappo=$('#'+teclaNavision.RAPPO_ID);
 	if (tableRappo.length){	//se siamo nella lista dei rapportini
 		teclaNavision.rappo.tableRappoAdjust(tableRappo,obj);
 	}
@@ -32,7 +32,7 @@ function qJqGrid_firstPage(grid) {
     var pagesize = grid.p.rowNum;
 
 	//TECLA CODE
-	if (grid.id==='listaRigheOdT'){
+	if (grid.id===teclaNavision.RAPPO_ID){
 		pagesize=teclaNavision.rappo.MAX_ROWS_NUMBER;	//aumento numero di righe
 	}
 	
@@ -50,6 +50,8 @@ function qJqGrid_firstPage(grid) {
 *****   TECLA NAVISION   ************************************************
 ************************************************************************/
 var teclaNavision=teclaNavision || {};
+
+teclaNavision.RAPPO_ID='listaRigheOdT';
 
 //RAPPORTINI
 teclaNavision.rappo=(function($,_window){
@@ -104,6 +106,16 @@ teclaNavision.rappo=(function($,_window){
 						...
 				*/
 	
+		//COMPACT LAYOUT COLUMNS
+		_compactHiddenColumns=[
+			'FromTimeOrd_String',
+			'ToTimeOrd_String',
+			'FromTimeStra_String',
+			'ToTimeStra_String',
+//			'OreStraordinarie',	//questa serve per posizionarci il totale conteggio ore giornata
+			'OreReperibilita',
+			'ImportoSpese'
+		],
 	
 		//ADD COLUMN NOTE
 		_highlightText=function(text,textToHighlight){
@@ -113,8 +125,8 @@ teclaNavision.rappo=(function($,_window){
 		//ADD COLUMN NOTE
 		_addColumnNote=function(){
 			//title
-			$('#jqgh_listaRigheOdT_EmptyField').prepend('Note');
-			var colsTitle=$('[id="listaRigheOdT_EmptyField"]'),
+			$('#jqgh_'+teclaNavision.RAPPO_ID+'_EmptyField').prepend('Note');
+			var colsTitle=$('[id="'+teclaNavision.RAPPO_ID+'_EmptyField"]'),
 				totWidth=0,
 				col;
 				colNoteRemoved=0;
@@ -134,9 +146,10 @@ teclaNavision.rappo=(function($,_window){
 			rows.each(function(index){
 				var row=$(this),
 					rowId=row.attr('id'),
-					colsEmpty=row.find('[aria-describedby="listaRigheOdT_EmptyField"]'),
+					colsEmpty=row.find('[aria-describedby="'+teclaNavision.RAPPO_ID+'_EmptyField"]'),
 					col,
-					note='';
+					note='',
+					luogo='';
 					
 				//first fake row (used for width, I presume)
 				if (row.hasClass('jqgfirstrow')){
@@ -146,15 +159,17 @@ teclaNavision.rappo=(function($,_window){
 					.width(totWidth);
 					for (var i=0;i<=colNoteRemoved;i++){
 						$(colsEmpty[colsEmpty.length - i])
-						.remove();
+//						.remove();
+						.hide();
 					}
 
 				//row rapportino
 				}else{
-					//find the "Note" value
+					//find the "Note" and "Luogo" value
 					for (var i=0;i<_data.length;i++){
 						if (_data[i].Riga==rowId){
 							note=_data[i].Note;
+							luogo=_data[i].LuogoAttivita;
 							break;
 						}
 					}
@@ -172,14 +187,28 @@ teclaNavision.rappo=(function($,_window){
 								_highlightText(note,'[A-Z0-9]+-[0-9]+')	//highlight issue number; ex: from this "ELESAB2B-706 SE_eComm: admin account with ecommerce utilities" to this "<b>ELESAB2B-706</b> SE_eComm: admin account with ecommerce utilities"
 							);
 						}else{
-							//col.hide();
-							col.remove();
+							col.hide();
+//							col.remove();
 						}
 					}
 					$(colsEmpty[0])
 					.width(totWidth);
+					
+					//add "Luogo" to "Vndere a cliente" column
+					row.find('[aria-describedby="'+teclaNavision.RAPPO_ID+'_VendereACliente"]')
+					.append(
+						$('<div/>',{'class':'teclaLuogo','style':'float: right;background: #d7dfeb;padding: 5px;'})
+						.append(
+							luogo
+						)
+					);
 				}
 			});
+/*TODO?
+			//change colModel of jqGrid (we remove the deleted columns)
+			var colModel=$('#'+teclaNavision.RAPPO_ID).jqGrid('getGridParam','colModel');
+		$("#grid").jqGrid('setLabel', colModel[i]['name'], obj.columnNames[i]);
+*/		
 
 		},
 	
@@ -205,11 +234,13 @@ teclaNavision.rappo=(function($,_window){
 			rows.each(function(index){
 				var row=$(this),
 					cols=row.find('td'),
-						colDay=cols.filter('[aria-describedby=listaRigheOdT_Data]'),
-					colHours=cols.filter('[aria-describedby=listaRigheOdT_OreOrdinarie]'),
+						colDay=cols.filter('[aria-describedby='+teclaNavision.RAPPO_ID+'_Data]'),
+					colHours=cols.filter('[aria-describedby='+teclaNavision.RAPPO_ID+'_OreOrdinarie]'),
 					gg=colDay.html(),
 					hours=+colHours.html().replace(',','.'),
-					isLastRow=rows.length==index+1;
+					isLastRow=rows.length==index+1,
+					COL_POSITION_TOTAL_HOURS='[aria-describedby='+teclaNavision.RAPPO_ID+'_OreStraordinarie]';
+//					COL_POSITION_TOTAL_HOURS='[aria-describedby='+teclaNavision.RAPPO_ID+'_FromTimeStra_String]';
 					
 				//AGGIORNAMENTO RIGHE PRECEDENTI
 				if ((gg!==ggOld && ggOld) || isLastRow){
@@ -219,7 +250,7 @@ teclaNavision.rappo=(function($,_window){
 					}
 					if (isLastRow){
 						hoursTot+=hours;
-						previousColHoursTot=cols.filter('[aria-describedby=listaRigheOdT_OreStraordinarie]');
+						previousColHoursTot=cols.filter(COL_POSITION_TOTAL_HOURS);
 						totalizePreviousDay(hoursTot,previousColHoursTot);
 					}
 				}
@@ -234,8 +265,106 @@ teclaNavision.rappo=(function($,_window){
 					ggOld=gg;
 					hoursTot=hours;	//conteggio nuovo totale ore
 				}
-				previousColHoursTot=cols.filter('[aria-describedby=listaRigheOdT_OreStraordinarie]');
+				previousColHoursTot=cols.filter(COL_POSITION_TOTAL_HOURS);
+				
+				//MERGE COLUMN "Commessa" e "Fase"
+				let mergeData={
+					'CodiceFase':	'NrCommessa',
+					'DexFaseLavoro':'DescCommessa',
+				};
+				for (var m in mergeData){
+					cols.filter('[aria-describedby='+teclaNavision.RAPPO_ID+'_'+mergeData[m]+']')
+					.append(
+						$('<div/>',{'class':'teclaLayoutMerged','style':'float: right;background: #d7dfeb;padding: 5px;'})
+						.append(
+							cols.filter('[aria-describedby='+teclaNavision.RAPPO_ID+'_'+m+']').html()
+						)
+					);
+				}
 			});
+		},
+
+		//SET COMPACT\FULL MODE LAYOUT (on rapportini table)
+		_tableLayoutMode=function(cb){
+			/*Input parameters:
+				cb		= [optional] callback function to be executed after layout change mode is applied
+			*/
+			//show\hide columns
+			setTimeout(function(){
+				if (_R.LAYOUT_MERGE){
+					$('.teclaLayoutMerged').show();
+				}else{
+					$('.teclaLayoutMerged').hide();
+				}
+				
+				setTimeout(function(){	//posticipato perchè l'istruzione "hideCol" va in errore
+					//resize
+					qJqGrid_resize(teclaNavision.RAPPO_ID);
+
+					//adjust column Note width
+					var widthContainer=$('#gview_'+teclaNavision.RAPPO_ID+' .ui-jqgrid-hdiv').width(),
+						widthtable=$('#gview_'+teclaNavision.RAPPO_ID+' .ui-jqgrid-hbox').width(),
+						addWidth=widthContainer-widthtable,
+						newWidth,
+						colNote;
+					if (addWidth>0){
+						colNote=$('#'+teclaNavision.RAPPO_ID+'_EmptyField');
+						newWidth=colNote.width()+addWidth;
+						colNote.width(newWidth);																	//title
+						_tableRappo.find('tr.jqgfirstrow td:nth-child('+(colNote.index()+1)+')').width(newWidth);	//first fake row (used for width, I presume)
+						$('[aria-describedby="'+teclaNavision.RAPPO_ID+'_EmptyField"]').width(newWidth);			//rows
+					}
+					
+					//callback function
+					if (typeof cb !=='undefined'){
+						cb();
+					}
+				},0);
+				$('#'+teclaNavision.RAPPO_ID).jqGrid(
+					_R.LAYOUT_COMPACT ? 'hideCol' : 'showCol',
+					_compactHiddenColumns
+				);
+				$('#'+teclaNavision.RAPPO_ID).jqGrid(
+					_R.LAYOUT_MERGE ? 'hideCol' : 'showCol',
+					[
+						'CodiceFase',
+						'DexFaseLavoro'
+					]
+				);
+			},0);
+		},
+
+		//
+		_setCookie=function(cname, cvalue, exdays){
+			/*Input parameters:
+				xxx		= [optional] xxx
+			Return value:	
+			*/
+			const d = new Date();
+			d.setTime(d.getTime() + (exdays*24*60*60*1000));
+			let expires = "expires="+ d.toUTCString();
+			document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+		},
+		
+		//
+		_getCookie=function(cname){
+			/*Input parameters:
+				xxx		= [optional] xxx
+			Return value:	
+			*/
+			let name = cname + "=";
+			let decodedCookie = decodeURIComponent(document.cookie);
+			let ca = decodedCookie.split(';');
+			for(let i = 0; i <ca.length; i++) {
+				let c = ca[i];
+				while (c.charAt(0) == ' ') {
+					c = c.substring(1);
+				}
+				if (c.indexOf(name) == 0) {
+					return c.substring(name.length, c.length);
+				}
+			}
+			return "";
 		},
 
 		//
@@ -252,11 +381,39 @@ teclaNavision.rappo=(function($,_window){
 
 		//INITIALIZATION
 		$(document).ready(function(){
-
+		
+			//GET USER OPTIONS
+			var userOptions=_getCookie('teclaNavisionOptions');
+			userOptions=userOptions ? JSON.parse(userOptions) : {
+				LAYOUT_COMPACT:true,
+				LAYOUT_MERGE:true
+			};
+			
 			//MESSAGE EXTRA FUNCTIONS ACTIVATED
 			var leftContainer=$('#accordionMenu .ui-accordion-content').first()
+				,options=$('<div/>')
+					.css({
+						'font-size': '12px',
+						'padding': '2px 10px 2px 6px',
+						'background': '#d5d899',
+						'display': 'inline-block',
+						'border-radius': '16px',
+						'margin-right': '5px',
+						'text-align': 'left'
+					})
+					.append(
+						$('<div/>')
+						.append('<input type="checkbox" id="teclaNavisionLayoutCompact" onclick="teclaNavision.rappo.tableRappoOptionsUpdate()"'+(userOptions.LAYOUT_COMPACT ? ' checked' : '')+'>')
+						.append('<label for="teclaNavisionLayoutCompact">compact</label>')
+					)
+					.append(
+						$('<div/>')
+						.append('<input type="checkbox" id="teclaNavisionLayoutMerge" onclick="teclaNavision.rappo.tableRappoOptionsUpdate()"'+(userOptions.LAYOUT_MERGE ? ' checked' : '')+'>')
+						.append('<label for="teclaNavisionLayoutMerge">merge</label>')
+					)
 				,message=$('<a/>',{
 						'id':'teclaNavisionMessage',
+						'target':'_blank',
 						'href':'https://github.com/asamorini/navision.rappo'
 					})
 					.css({
@@ -284,7 +441,9 @@ teclaNavision.rappo=(function($,_window){
 					});
 			leftContainer
 			.append(
-				messageContainer.append(message.html('Tecla plugin enabled'))
+				messageContainer
+				.append(options)
+				.append(message.html('Tecla plugin enabled'))
 			);
 			//"version" highlight effect: START
 			message=$('#teclaNavisionMessage');
@@ -303,6 +462,8 @@ teclaNavision.rappo=(function($,_window){
 	//-----------------   public methods   -----------------
 	return{
 
+		LAYOUT_COMPACT:true,
+		LAYOUT_MERGE:true,	//merge columns "Commessa" e "Fase"
 		MAX_ROWS_NUMBER:120,
 
 		//ADJUST RAPPORTINI
@@ -318,12 +479,16 @@ teclaNavision.rappo=(function($,_window){
 			_tableRappo=tableRappo;
 			
 			//there is only one page of rows
-			if ($('#listaRigheOdT_btnPrev').is(':disabled')
-			   && $('#listaRigheOdT_btnNext').is(':disabled')){
+			if ($('#'+teclaNavision.RAPPO_ID+'_btnPrev').is(':disabled')
+			   && $('#'+teclaNavision.RAPPO_ID+'_btnNext').is(':disabled')){
 				_data=obj.Oggetti;
 				_addColumnNote(obj);
 				_showTotalHours();
-				_tableRappo.show();
+				_tableLayoutMode(
+					function(){
+						_tableRappo.show();
+					}
+				);
 				
 			//there are many pages of rows (so we retrieve all)
 			}else{
@@ -338,6 +503,19 @@ teclaNavision.rappo=(function($,_window){
 			}
 		},
 
+		//UPDATED OPTIONS
+		tableRappoOptionsUpdate:function(){
+			teclaNavision.rappo.LAYOUT_COMPACT=$('#teclaNavisionLayoutCompact').is(":checked");
+			teclaNavision.rappo.LAYOUT_MERGE=$('#teclaNavisionLayoutMerge').is(":checked");
+			if (_R){
+				_tableLayoutMode();
+			}
+			_setCookie('teclaNavisionOptions',JSON.stringify({
+				LAYOUT_COMPACT:teclaNavision.rappo.LAYOUT_COMPACT,
+				LAYOUT_MERGE:teclaNavision.rappo.LAYOUT_MERGE
+			}),365);
+		},
+		
 		//
 		xxx:function(name){
 			/*Input parameters
