@@ -178,10 +178,11 @@ teclaNavision.rappo=(function($,_window){
 						col=$(colsEmpty[i]);
 						if (i===0){
 							col.css({
-								'background':'#1d4f9c',
+								'background':'#d7dfeb',	//old color: #1d4f9c
 								'text-align':'left',
 								'white-space':'normal',
-								'color':'white'
+//								'color':'white',
+								'font-weight':'bold'
 							})
 							.html(
 								_highlightText(note,'[A-Z0-9]+-[0-9]+')	//highlight issue number; ex: from this "ELESAB2B-706 SE_eComm: admin account with ecommerce utilities" to this "<b>ELESAB2B-706</b> SE_eComm: admin account with ecommerce utilities"
