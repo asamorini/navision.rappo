@@ -305,7 +305,7 @@ teclaNavision.rappo=(function($,_window){
 					//adjust column Note width
 					var widthContainer=$('#gview_'+teclaNavision.RAPPO_ID+' .ui-jqgrid-hdiv').width(),
 						widthtable=$('#gview_'+teclaNavision.RAPPO_ID+' .ui-jqgrid-hbox').width(),
-						addWidth=widthContainer-widthtable,
+						addWidth=widthContainer-widthtable-17,	//"17" for vertical scrollbar
 						newWidth,
 						colNote;
 					if (addWidth>0){
