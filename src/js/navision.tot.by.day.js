@@ -396,7 +396,7 @@ teclaNavision.rappo=(function($,_window){
 					.css({
 						'font-size': '12px',
 						'padding': '2px 10px 2px 6px',
-						'background': '#d5d899',
+						'background': '#d7dfeb',
 						'display': 'inline-block',
 						'border-radius': '16px',
 						'margin-right': '5px',
