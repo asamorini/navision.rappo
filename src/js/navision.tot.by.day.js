@@ -198,7 +198,7 @@ teclaNavision.rappo=(function($,_window){
 					//add "Luogo" to "Vndere a cliente" column
 					row.find('[aria-describedby="'+teclaNavision.RAPPO_ID+'_VendereACliente"]')
 					.append(
-						$('<div/>',{'class':'teclaLuogo','style':'float: right;background: #d7dfeb;padding: 5px;'})
+						$('<div/>',{'class':'teclaLuogo','style':'float: right;background: '+(luogo==='SmartWorking' ? '#d7dfeb' : '#d0fcd0')+';padding: 5px;'})
 						.append(
 							luogo
 						)
