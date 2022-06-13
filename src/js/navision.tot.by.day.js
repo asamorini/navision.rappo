@@ -80,7 +80,7 @@ teclaNavision.rappo=(function($,_window){
 							"Targa":"",
 							"LuogoPartenza":"",
 							"LuogoDestinazine":"",
-							"LuogoAttivita":"Interna",
+							"LuogoAttivita":"SmartWorking",
 							"TipoTrasferta":"Italia",
 							"Note":"ELEGANTB2B-1265 Geo-blocking translations store-checker",
 							"LuogoAttivitaList":"System.Collections.Generic.Dictionary`2[System.String,System.String]",
@@ -114,7 +114,8 @@ teclaNavision.rappo=(function($,_window){
 			'ToTimeStra_String',
 //			'OreStraordinarie',	//questa serve per posizionarci il totale conteggio ore giornata
 			'OreReperibilita',
-			'ImportoSpese'
+			'ImportoSpese',
+			'LuogoAttivita'
 		],
 	
 		//ADD COLUMN NOTE
